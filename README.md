@@ -40,7 +40,7 @@ Then open the address Vite prints (http://localhost:5173 by default).
 
 Pushing to the `main` branch of the GitHub repo runs
 `.github/workflows/deploy.yml`, which builds the site and publishes it to
-GitHub Pages at `https://almarga.github.io/dance-portfolio/`.
+GitHub Pages at `https://alecson12.github.io/dance-portfolio/`.
 The repo must be named `dance-portfolio`; if it is named differently, change
 `base` in `vite.config.js` to match.
 

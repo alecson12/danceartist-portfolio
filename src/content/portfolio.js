@@ -25,8 +25,8 @@ export const PORTFOLIO = {
 
   // Tiny footer link back to the main site. Set `footer` to null to hide it.
   footer: {
-    label: 'almarga.github.io',
-    href: 'https://almarga.github.io/',
+    label: 'alecson12.github.io',
+    href: 'https://alecson12.github.io/',
   },
 
   // Spinning star overlay — currently OFF. To turn it back on, replace `null`

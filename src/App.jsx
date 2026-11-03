@@ -11,9 +11,10 @@ export default function App() {
     document.body.style.background = PORTFOLIO.background
   }, [])
 
+  const maxWidth = PORTFOLIO.maxWidth ?? 'none'
   return (
     <div className="min-h-dvh" style={{ background: PORTFOLIO.background }}>
-      <main className="mx-auto w-full" style={{ maxWidth: PORTFOLIO.maxWidth }}>
+      <main className="mx-auto w-full" style={{ maxWidth }}>
         {pages.length === 0 ? (
           <Empty />
         ) : (
@@ -24,7 +25,7 @@ export default function App() {
       </main>
 
       {PORTFOLIO.footer && (
-        <footer className="mx-auto w-full py-6 text-center" style={{ maxWidth: PORTFOLIO.maxWidth }}>
+        <footer className="mx-auto w-full py-6 text-center" style={{ maxWidth }}>
           <a
             href={PORTFOLIO.footer.href}
             className="text-xs tracking-wide text-white/40 transition-colors hover:text-white/80"
@@ -41,7 +42,7 @@ export default function App() {
 function Page({ page, index }) {
   const stars = (PORTFOLIO.stars && STARS[page.name]) || []
   return (
-    <div className="relative">
+    <div className="relative overflow-hidden">
       <img
         src={page.src}
         width={page.width}

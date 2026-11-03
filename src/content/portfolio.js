@@ -19,9 +19,9 @@ export const PORTFOLIO = {
   // Page background behind and around the images. Any CSS colour.
   background: '#000000',
 
-  // Widest the image stack gets on big screens (px). Below that the images
-  // fill the viewport width; above it they are centred.
-  maxWidth: 1400,
+  // Widest the image stack gets on big screens, in px. null = no limit: the
+  // pages always fill the full width of the window.
+  maxWidth: null,
 
   // Tiny footer link back to the main site. Set `footer` to null to hide it.
   footer: {

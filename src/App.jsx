@@ -10,9 +10,10 @@ const NAV_H = PORTFOLIO.header ? 56 : 0
 
 const slug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
 
-// Resolve each header link to the page it points at.
+// Resolve each header link (and its drop-down children) to the page it points at.
+const resolve = (l) => ({ ...l, target: pages.find((p) => p.name.includes(l.page)) })
 const links = (PORTFOLIO.header?.links ?? [])
-  .map((l) => ({ ...l, target: pages.find((p) => p.name.includes(l.page)) }))
+  .map((l) => ({ ...resolve(l), children: (l.children ?? []).map(resolve).filter((c) => c.target) }))
   .filter((l) => l.target)
 
 export default function App() {
@@ -53,6 +54,19 @@ export default function App() {
 function Header() {
   const { name, subtitle } = PORTFOLIO.header
   const [active, setActive] = useState(links[0]?.target.name ?? '')
+  const [open, setOpen] = useState(null) // label of the drop-down that is open (tap/keyboard)
+
+  useEffect(() => {
+    if (!open) return
+    const close = (e) => { if (!e.target.closest?.('header')) setOpen(null) }
+    const onKey = (e) => e.key === 'Escape' && setOpen(null)
+    window.addEventListener('pointerdown', close)
+    window.addEventListener('keydown', onKey)
+    return () => {
+      window.removeEventListener('pointerdown', close)
+      window.removeEventListener('keydown', onKey)
+    }
+  }, [open])
 
   useEffect(() => {
     // Which link is active = the last link whose page has reached the probe line,
@@ -82,6 +96,7 @@ function Header() {
     const top = l === links[0] ? 0 : el.offsetTop - NAV_H
     window.scrollTo({ top, behavior: 'smooth' })
     history.replaceState(null, '', l === links[0] ? window.location.pathname : `#${slug(l.target.name)}`)
+    setOpen(null)
   }
 
   return (
@@ -91,20 +106,53 @@ function Header() {
           <span className="block text-sm font-semibold tracking-wide">{name}</span>
           {subtitle && <span className="block text-[11px] tracking-[0.18em] text-white/55 uppercase">{subtitle}</span>}
         </a>
-        <nav aria-label="Sections" className="-mx-4 flex h-full w-full items-stretch overflow-x-auto px-4 sm:mx-0 sm:w-auto sm:px-0 [scrollbar-width:none]">
+        <nav aria-label="Sections" className="flex h-full w-full items-stretch justify-between sm:w-auto sm:justify-end">
           {links.map((l) => {
             const on = active === l.target.name
+            const hasMenu = l.children.length > 0
+            const isOpen = open === l.label
             return (
-              <a
-                key={l.label}
-                href={`#${slug(l.target.name)}`}
-                onClick={(e) => go(e, l)}
-                className={`relative flex shrink-0 items-center px-2.5 text-[11px] tracking-[0.06em] whitespace-nowrap uppercase transition-colors sm:px-4 sm:text-[13px] sm:tracking-[0.12em] ${on ? 'text-white' : 'text-white/60 hover:text-white'}`}
-              >
-                <span className="sm:hidden">{l.short ?? l.label}</span>
-                <span className="hidden sm:inline">{l.label}</span>
+              <div key={l.label} className="group relative flex shrink-0 items-stretch">
+                <a
+                  href={`#${slug(l.target.name)}`}
+                  onClick={(e) => go(e, l)}
+                  className={`relative flex items-center pl-2.5 text-[11px] tracking-[0.06em] whitespace-nowrap uppercase transition-colors sm:pl-4 sm:text-[13px] sm:tracking-[0.12em] ${hasMenu ? 'pr-1' : 'pr-2.5 sm:pr-4'} ${on ? 'text-white' : 'text-white/60 hover:text-white'}`}
+                >
+                  <span className="sm:hidden">{l.short ?? l.label}</span>
+                  <span className="hidden sm:inline">{l.label}</span>
+                </a>
+                {hasMenu && (
+                  <button
+                    type="button"
+                    aria-label={`${l.label} shortcuts`}
+                    aria-expanded={isOpen}
+                    onClick={() => setOpen(isOpen ? null : l.label)}
+                    className={`flex items-center pr-2.5 pl-0.5 text-white/60 transition-colors hover:text-white sm:pr-4 ${isOpen ? 'text-white' : ''}`}
+                  >
+                    <svg width="10" height="10" viewBox="0 0 10 10" className={`transition-transform ${isOpen ? 'rotate-180' : ''}`} aria-hidden="true">
+                      <path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.6" />
+                    </svg>
+                  </button>
+                )}
                 {on && <span className="absolute inset-x-2.5 bottom-0 h-[3px] bg-[#c8102e] sm:inset-x-4" />}
-              </a>
+                {hasMenu && (
+                  <ul
+                    className={`absolute top-full right-0 z-50 min-w-[220px] border border-white/10 bg-black/90 py-1.5 shadow-xl backdrop-blur-md ${isOpen ? 'block' : 'hidden'} [@media(hover:hover)]:group-hover:block`}
+                  >
+                    {l.children.map((c) => (
+                      <li key={c.label}>
+                        <a
+                          href={`#${slug(c.target.name)}`}
+                          onClick={(e) => go(e, c)}
+                          className="block px-4 py-2 text-[12px] tracking-[0.08em] whitespace-nowrap text-white/70 uppercase transition-colors hover:bg-white/10 hover:text-white"
+                        >
+                          {c.label}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
             )
           })}
         </nav>

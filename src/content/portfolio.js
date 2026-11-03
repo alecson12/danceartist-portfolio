@@ -31,18 +31,37 @@ export const PORTFOLIO = {
 
   // What fills the space beside a page when it does not reach the window edges:
   // 'blur' = a blurred, darkened copy of the page itself; null = plain background.
-  sides: 'blur',
+  sides: null,
 
   // Header. Each link scrolls to the first page whose filename contains `page`.
-  // `short` (optional) is the label used on phones. Set `header` to null to hide it.
+  // `short` (optional) is the label used on phones. `children` adds a drop-down
+  // of shortcuts under that link. Set `header` to null to hide it.
   header: {
     name: 'Alecson Gantica',
     subtitle: 'Dance Artist',
     links: [
       { label: 'Start', page: 'Page0' },
       { label: 'About Me', page: 'Page1' },
-      { label: 'Highlights', page: 'Highlight_01' },
-      { label: 'Works & Projects', short: 'Works', page: 'Works_01' },
+      {
+        label: 'Highlights',
+        page: 'Highlight_01',
+        children: [
+          { label: 'Competitions (Group)', page: 'Highlight_02' },
+          { label: 'Competitions (Solo)', page: 'Highlight_06' },
+        ],
+      },
+      {
+        label: 'Works & Projects',
+        short: 'Works',
+        page: 'Works_01',
+        children: [
+          { label: 'TV Appearances', page: 'Works_02' },
+          { label: 'Coaching Experience', page: 'Works_04' },
+          { label: 'Competition Judging', page: 'Works_05' },
+          { label: 'Corporate Guesting', page: 'Works_06' },
+          { label: 'Passion Projects', page: 'Works_09' },
+        ],
+      },
     ],
   },
 

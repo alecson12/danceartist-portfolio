@@ -10,3 +10,20 @@ body {
 img {
   display: block;
 }
+
+/* Slowly spinning star overlays. --spin-from is the star's starting angle so it
+   sits exactly on the drawn star at the start of every turn. */
+@keyframes spin {
+  from { transform: rotate(var(--spin-from, 0deg)); }
+  to   { transform: rotate(calc(var(--spin-from, 0deg) + 360deg)); }
+}
+.spin {
+  animation: spin 16s linear infinite;
+  will-change: transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  .spin {
+    animation: none;
+    transform: rotate(var(--spin-from, 0deg));
+  }
+}

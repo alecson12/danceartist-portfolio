@@ -1,6 +1,9 @@
 import { useEffect } from 'react'
 import pages from 'virtual:pages'
 import { PORTFOLIO } from './content/portfolio.js'
+import { STARS } from './content/stars.js'
+
+const BASE = import.meta.env.BASE_URL
 
 export default function App() {
   useEffect(() => {
@@ -15,17 +18,7 @@ export default function App() {
           <Empty />
         ) : (
           pages.map((page, i) => (
-            <img
-              key={page.name}
-              src={page.src}
-              width={page.width}
-              height={page.height}
-              alt={PORTFOLIO.alt[page.name] ?? `${PORTFOLIO.title}, page ${i + 1}`}
-              className="h-auto w-full"
-              loading={i < 2 ? 'eager' : 'lazy'}
-              fetchPriority={i === 0 ? 'high' : 'auto'}
-              decoding="async"
-            />
+            <Page key={page.name} page={page} index={i} />
           ))
         )}
       </main>
@@ -40,6 +33,59 @@ export default function App() {
           </a>
         </footer>
       )}
+    </div>
+  )
+}
+
+// One page image plus its spinning stars, positioned in % so they scale with the image.
+function Page({ page, index }) {
+  const stars = (PORTFOLIO.stars && STARS[page.name]) || []
+  return (
+    <div className="relative">
+      <img
+        src={page.src}
+        width={page.width}
+        height={page.height}
+        alt={PORTFOLIO.alt[page.name] ?? `${PORTFOLIO.title}, page ${index + 1}`}
+        className="h-auto w-full"
+        loading={index < 2 ? 'eager' : 'lazy'}
+        fetchPriority={index === 0 ? 'high' : 'auto'}
+        decoding="async"
+      />
+      {stars.map((star, i) => (
+        <Star key={i} star={star} index={i} />
+      ))}
+    </div>
+  )
+}
+
+function Star({ star, index }) {
+  const { icon, scale, seconds } = PORTFOLIO.stars
+  const size = star.s * scale
+  // vary speed and direction per star so the page feels alive rather than mechanical
+  const duration = seconds * (0.85 + ((index * 7) % 5) * 0.12)
+  const reverse = index % 2 === 1
+  return (
+    <div
+      className="pointer-events-none absolute"
+      style={{
+        left: `${star.x}%`,
+        top: `${star.y}%`,
+        width: `${size}%`,
+        transform: 'translate(-50%, -50%)',
+      }}
+    >
+      <img
+        src={BASE + icon}
+        alt=""
+        aria-hidden="true"
+        className="spin block h-auto w-full"
+        style={{
+          '--spin-from': `${star.r ?? 0}deg`,
+          animationDuration: `${duration}s`,
+          animationDirection: reverse ? 'reverse' : 'normal',
+        }}
+      />
     </div>
   )
 }

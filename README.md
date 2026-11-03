@@ -13,6 +13,18 @@ stack, full width at any screen size.
 Everything else that is editable (tab title, background colour, max width,
 footer link, optional alt text) is in `src/content/portfolio.js`.
 
+## Spinning stars
+
+The star icon in `public/icon/star_p5.png` is laid over every small star in the
+pages and slowly spins. Its positions live in `src/content/stars.js`:
+
+- `npm run find-stars` regenerates that file by scanning the images (run it
+  again if a page image changes).
+- The file is plain data you can hand-edit: delete a line to remove a star,
+  copy a line and change `x`/`y` (percent of the image) to add one.
+- Size, speed and the icon itself are set under `stars` in
+  `src/content/portfolio.js`; set `stars: null` to turn the effect off.
+
 ## Running it
 
 ```bash

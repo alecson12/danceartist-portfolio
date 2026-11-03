@@ -29,12 +29,12 @@ export const PORTFOLIO = {
     href: 'https://almarga.github.io/',
   },
 
-  // Spinning star overlay. Set `stars` to null to turn it off.
-  stars: {
-    icon: 'icon/star_p5.png', // inside public/
-    scale: 1.3,               // overlay size relative to the star it covers
-    seconds: 16,              // one full turn; each star varies a little so they drift out of sync
-  },
+  // Spinning star overlay — currently OFF. To turn it back on, replace `null`
+  // with:  { icon: 'icon/star_p5.png', scale: 1.3, seconds: 16 }
+  //   icon    = file inside public/
+  //   scale   = overlay size relative to the star it covers
+  //   seconds = one full turn; each star varies a little so they drift out of sync
+  stars: null,
 
   // Screen-reader text per image. Optional: any image not listed here gets
   // "<title>, page N". Keys are the filenames in public/pages/.

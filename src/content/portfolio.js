@@ -29,6 +29,23 @@ export const PORTFOLIO = {
   // than the screen.
   fitScreen: true,
 
+  // What fills the space beside a page when it does not reach the window edges:
+  // 'blur' = a blurred, darkened copy of the page itself; null = plain background.
+  sides: 'blur',
+
+  // Header. Each link scrolls to the first page whose filename contains `page`.
+  // `short` (optional) is the label used on phones. Set `header` to null to hide it.
+  header: {
+    name: 'Alecson Gantica',
+    subtitle: 'Dance Artist',
+    links: [
+      { label: 'Start', page: 'Page0' },
+      { label: 'About Me', page: 'Page1' },
+      { label: 'Highlights', page: 'Highlight_01' },
+      { label: 'Works & Projects', short: 'Works', page: 'Works_01' },
+    ],
+  },
+
   // Tiny footer link back to the main site. Set `footer` to null to hide it.
   footer: {
     label: 'alecson12.github.io',

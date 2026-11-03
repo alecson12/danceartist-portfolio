@@ -6,6 +6,14 @@ body {
   min-height: 100%;
 }
 
+/* Header links scroll to pages smoothly; the hidden scrollbar keeps the phone nav row clean. */
+html {
+  scroll-behavior: smooth;
+}
+nav::-webkit-scrollbar {
+  display: none;
+}
+
 /* Stacked images: block layout removes the inline baseline gap, so nothing sits between them. */
 img {
   display: block;

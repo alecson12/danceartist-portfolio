@@ -48,7 +48,8 @@ function Page({ page, index }) {
         width={page.width}
         height={page.height}
         alt={PORTFOLIO.alt[page.name] ?? `${PORTFOLIO.title}, page ${index + 1}`}
-        className="h-auto w-full"
+        className="mx-auto h-auto w-full"
+        style={PORTFOLIO.fitScreen ? { maxWidth: `calc(100dvh * ${page.width / page.height})` } : undefined}
         loading={index < 2 ? 'eager' : 'lazy'}
         fetchPriority={index === 0 ? 'high' : 'auto'}
         decoding="async"

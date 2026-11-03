@@ -23,6 +23,12 @@ export const PORTFOLIO = {
   // pages always fill the full width of the window.
   maxWidth: null,
 
+  // true = each page is scaled so the whole page fits on screen (full width on a
+  // monitor of the same shape, slightly narrower with background at the sides
+  // on shorter screens). false = always full width, even if a page is taller
+  // than the screen.
+  fitScreen: true,
+
   // Tiny footer link back to the main site. Set `footer` to null to hide it.
   footer: {
     label: 'alecson12.github.io',

@@ -155,7 +155,7 @@ export default memo(function Stage({ page, eager, onOpen }) {
           item.t === 'text' ? (
             <LiveText key={item.id} item={item} className={ENTER.text} style={{ '--i': order.get(item.id), '--z': stack.get(item.id) }} {...(linkProps(item.link) || {})} />
           ) : (
-            <Piece key={item.id} item={item} order={order.get(item.id)} z={stack.get(item.id)} scale={scale} eager={eager} onOpen={open} />
+            <Piece key={item.id} item={item} order={order.get(item.id)} z={stack.get(item.id)} scale={scale} eager={eager} onOpen={open} still={item.y <= 3 || item.y + item.h >= DESIGN.h - 3 /* continues on the next page: must not move apart from its other half */} />
           ),
         )}
       </div>

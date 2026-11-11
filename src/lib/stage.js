@@ -14,7 +14,8 @@ function measure() {
   // below about 960 px a whole page would shrink its lettering under 8 px: re-stack instead
   const flow = vw < 960 || vh < 430
   // one page fills the screen under the header; never wider than the window
-  const width = Math.max(320, Math.min(vw, Math.round(((vh - NAV_H) * DESIGN.w) / DESIGN.h)))
+  // (in the column layout a page shown whole, such as a section cover, spans the full width)
+  const width = flow ? vw : Math.max(320, Math.min(vw, Math.round(((vh - NAV_H) * DESIGN.w) / DESIGN.h)))
   return { mode: flow ? 'flow' : 'stage', vw, vh, width, scale: width / DESIGN.w }
 }
 
@@ -31,6 +32,8 @@ export function useStageSize() {
       const root = document.documentElement.style
       root.setProperty('--stage-w', m.width + 'px')
       root.setProperty('--s', String(m.scale))
+      // whole pixels, so consecutive pages meet without a hairline between them
+      root.setProperty('--stage-h', Math.floor((m.width * DESIGN.h) / DESIGN.w) + 'px')
       setSize((prev) => (prev.mode === m.mode && prev.width === m.width && prev.vw === m.vw ? prev : m))
     }
     const onResize = () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(apply) }

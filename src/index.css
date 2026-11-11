@@ -52,7 +52,9 @@ img { display: block; }
      Everything inside is positioned in design pixels.
      ------------------------------------------------------------------- */
   .page { position: relative; overflow: clip; }
-  .stage { position: relative; margin-inline: auto; overflow: hidden; width: var(--stage-w, 100vw); height: calc(var(--stage-w, 100vw) * 1842 / 3275); }
+  .stage { position: relative; margin-inline: auto; overflow: hidden; width: var(--stage-w, 100vw); height: var(--stage-h, calc(var(--stage-w, 100vw) * 1842 / 3275)); }
+  /* each page tucks one pixel under the one before it: no seam where artwork crosses from page to page */
+  .page + .page { margin-top: -1px; }
   .stage-inner { position: absolute; left: 0; top: 0; width: 3275px; height: 1842px; transform: scale(var(--s, 0.3)); transform-origin: 0 0; }
   /* anything laid out in design pixels and then scaled */
   .design { text-rendering: geometricPrecision; font-variant-ligatures: none; font-kerning: normal; -webkit-font-smoothing: antialiased; }
@@ -80,6 +82,14 @@ img { display: block; }
   .flow { position: relative; padding: 30px 16px 38px; overflow: hidden; background-size: cover; background-position: center; }
   .flow > * { max-width: 688px; margin-inline: auto; }
   .patch { position: relative; flex: none; }
+  /* the top or bottom band of the page as designed, full width, melting into the column: the
+     star clusters that run across page borders keep running across sections */
+  .flow > .edge { position: relative; overflow: hidden; max-width: none; width: calc(100% + 32px); margin-inline: -16px; pointer-events: none; }
+  .edge-top { margin-top: -30px; margin-bottom: 6px; mask-image: linear-gradient(#000 30%, transparent 78%); }
+  .edge-bottom { margin-top: 10px; margin-bottom: -38px; mask-image: linear-gradient(transparent 28%, #000 80%); }
+  .flow-about > .edge-top { margin-top: -22px; }
+  .edge-inner { position: absolute; left: 0; top: 0; width: 3275px; transform-origin: 0 0; }
+  .edge-inner > img.edge-plate { position: absolute; left: 0; width: 3275px; height: 1842px; max-width: none; }
   .patch-inner { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
 
   .flow-paper { background-color: #fbf1e4; background-image: url("/art/common/paper.webp"); background-size: 420px 420px; background-repeat: repeat; }
@@ -92,7 +102,6 @@ img { display: block; }
   .cluster-left .patch { margin-left: 4%; margin-right: auto; }
   .cluster-right .patch { margin-left: auto; margin-right: 4%; }
 
-  .flow-cover { display: grid; place-items: center; min-height: min(64svh, 520px); padding-block: 56px; }
   .flow-intro { display: flex; flex-direction: column; min-height: calc(100svh - var(--nav-h)); padding-bottom: 0; background-position: 28% center; }
   .flow-intro-top { width: 100%; }
   .flow-pills { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 0; margin: 14px 0 12px -4px; }

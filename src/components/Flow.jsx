@@ -4,10 +4,10 @@
 // Nothing is redrawn here: a photo group is a patch of the design scaled to the column width,
 // a label or a chip is the design's own label scaled so its text is comfortable to read.
 import { memo } from 'react'
-import { ASSET } from '../content/pages.js'
+import { ASSET, DESIGN } from '../content/pages.js'
 import { useStage } from '../lib/stage.js'
 import LiveText from './LiveText.jsx'
-import { Piece, arrival, enterClass, linkProps, useReveal } from './Stage.jsx'
+import Stage, { Piece, arrival, enterClass, linkProps, useReveal } from './Stage.jsx'
 
 const PAD = 16
 const MAX_W = 720
@@ -107,6 +107,26 @@ function Section({ page, children, className = '', style, plate }) {
   )
 }
 
+const EDGE_H = 340
+/** The top or bottom band of a page exactly as designed (background and stars), at full width. */
+function Edge({ page, at }) {
+  const { vw } = useStage()
+  const s = vw / DESIGN.w
+  const y0 = at === 'top' ? 0 : DESIGN.h - EDGE_H
+  const stars = page.items.filter((i) => i.role === 'star' && i.y < y0 + EDGE_H && i.y + i.h > y0)
+  const p = page.plate
+  return (
+    <div className={`edge edge-${at}`} style={{ height: Math.floor(EDGE_H * s) }} aria-hidden="true">
+      <div className="edge-inner" style={{ height: EDGE_H, transform: `scale(${s})` }}>
+        <img className="edge-plate" style={{ top: -y0 }} src={ASSET(p.srcs[3].src)} srcSet={p.srcs.map((x) => `${ASSET(x.src)} ${x.w}w`).join(', ')} sizes={`${Math.ceil(vw)}px`} alt="" loading="lazy" decoding="async" draggable={false} />
+        {stars.map((it) => (
+          <Piece key={it.id} item={it} oy={y0} scale={s} still />
+        ))}
+      </div>
+    </div>
+  )
+}
+
 function Reveal({ children, className = '', style, as: Tag = 'div' }) {
   const [ref, seen] = useReveal(0.12)
   return (
@@ -201,6 +221,7 @@ function FlowCollage({ page, colW, onOpen }) {
   const groups = clusters(page)
   return (
     <Section page={page} className="flow-paper">
+      <Edge page={page} at="top" />
       {titles.length > 0 && (
         <Reveal className="flow-titles">
           {titles.map((t) => (
@@ -211,24 +232,12 @@ function FlowCollage({ page, colW, onOpen }) {
       {groups.map((g, i) => (
         <Cluster key={(g.items[0] || g.labels[0]).id} cluster={g} colW={colW} onOpen={onOpen} index={i} />
       ))}
+      <Edge page={page} at="bottom" />
     </Section>
   )
 }
 
 // ---------------------------------------------------------------- cover pages
-
-function FlowCover({ page, colW }) {
-  const titles = page.items.filter((i) => i.kind === 'title')
-  return (
-    <Section page={page} plate="big" className="flow-cover">
-      <Reveal>
-        {titles.map((t) => (
-          <Heading key={t.id} item={t} colW={colW} max={0.9} />
-        ))}
-      </Reveal>
-    </Section>
-  )
-}
 
 function FlowIntro({ page, colW, onOpen }) {
   const title = page.items.find((i) => i.role === 'title')
@@ -405,6 +414,7 @@ function FlowAbout({ page, colW, onOpen }) {
 
   return (
     <Section page={page} className="flow-paper flow-about">
+      <Edge page={page} at="top" />
       <Reveal>
         {tab && <Solo item={tab} scale={0.42} className="about-tab" />}
         {title && <Solo item={title} scale={Math.min((colW * 0.98) / title.w, 0.5)} className="mt-4" />}
@@ -421,6 +431,7 @@ function FlowAbout({ page, colW, onOpen }) {
         </Reveal>
       )}
       {ordered.map(block)}
+      <Edge page={page} at="bottom" />
     </Section>
   )
 }
@@ -448,6 +459,6 @@ export default memo(function Flow({ page, onOpen }) {
   if (page.id === 'intro') return <FlowIntro page={page} colW={colW} onOpen={open} />
   if (page.id === 'about') return <FlowAbout page={page} colW={colW} onOpen={open} />
   if (page.id === 'thanks') return <FlowThanks page={page} colW={colW} onOpen={open} />
-  if (!page.items.some((i) => i.kind === 'photo' || i.kind === 'label')) return <FlowCover page={page} colW={colW} />
+  if (!page.items.some((i) => i.kind === 'photo' || i.kind === 'label')) return <Stage page={page} onOpen={onOpen} />
   return <FlowCollage page={page} colW={colW} onOpen={open} />
 })

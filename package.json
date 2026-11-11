@@ -7,17 +7,21 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "find-stars": "node scripts/find-stars.cjs"
+    "extract": "node --max-old-space-size=24000 scripts/psd/extract.cjs"
   },
   "dependencies": {
+    "@fontsource-variable/source-code-pro": "^5.3.1",
+    "@fontsource/bebas-neue": "^5.3.0",
     "@tailwindcss/vite": "^4.3.4",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "tailwindcss": "^4.3.4"
   },
   "devDependencies": {
+    "@fontsource/source-code-pro": "^5.3.1",
     "@vitejs/plugin-react": "^6.2.1",
-    "image-size": "^2.0.4",
+    "ag-psd": "^34.1.0",
+    "opentype.js": "^2.0.0",
     "sharp": "^0.34.5",
     "vite": "^8.3.5"
   }

@@ -6,15 +6,15 @@ export const NAV_H = 56
 /**
  * How the pages are shown in the current window.
  *   mode 'stage'  each page is the design itself, scaled as a whole to fit the screen
- *   mode 'flow'   phones, upright tablets and narrow windows: the same pieces, re-stacked in one column
+ *   mode 'flow'   phones, upright tablets and narrow windows: the same whole pages at full width, with the compact menu
  */
 function measure() {
   const vw = document.documentElement.clientWidth
   const vh = window.innerHeight
-  // below about 960 px a whole page would shrink its lettering under 8 px: re-stack instead
+  // narrow or very short windows: full-width pages and the compact menu
   const flow = vw < 960 || vh < 430
   // one page fills the screen under the header; never wider than the window
-  // (in the column layout a page shown whole, such as a section cover, spans the full width)
+  // (on narrow screens a page always spans the full width)
   const width = flow ? vw : Math.max(320, Math.min(vw, Math.round(((vh - NAV_H) * DESIGN.w) / DESIGN.h)))
   return { mode: flow ? 'flow' : 'stage', vw, vh, width, scale: width / DESIGN.w }
 }

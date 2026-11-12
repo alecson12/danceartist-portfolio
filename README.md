@@ -11,8 +11,8 @@ design instead of showing the design as flat pictures.
   and stay sharp at any size.
 - **Things work.** The three buttons on the first page, the header menu, every
   contact chip and every photo (opens in a full-screen viewer) are functional.
-- **Phones get their own layout.** The same pieces are re-stacked in one
-  readable column instead of shrinking a whole page.
+- **Same pages on every screen.** Phones show the pages whole, scaled to the
+  screen width, with a compact menu; pinch to zoom in.
 
 Live at https://alecson12.github.io/danceartist-portfolio/
 
@@ -80,7 +80,6 @@ src/content/generated/*.json          where every piece and line of text goes
         │
         ▼
 src/components/Stage.jsx   a page at 3275 × 1842, scaled as a whole (desktop, tablet)
-src/components/Flow.jsx    the same pieces in one column (phones)
 ```
 
 **Extraction** (`scripts/psd/`)
@@ -112,9 +111,8 @@ scale of 255 is invisible).
 - Live text is pinned by its baseline and carries the layer's own transform
   (`components/LiveText.jsx`); `lib/fonts.js` measures where each font's baseline
   falls in the visitor's browser.
-- Below 960 px wide the phone layout takes over (`components/Flow.jsx`): photo
-  groups become patches of the design scaled to the column, labels and chips are
-  the design's own, scaled so their text is comfortable to read.
+- Below 960 px wide the pages span the full width and the header becomes a
+  compact menu. The pages themselves are the same.
 - Movement is subtle and optional: pieces arrive as a page scrolls in, photos and
   buttons lift on hover. It is skipped entirely for visitors who ask their device
   for reduced motion.

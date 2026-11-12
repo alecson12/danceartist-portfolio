@@ -5,7 +5,6 @@ import { NAV_H, StageProvider, scrollToPage, useStageSize } from './lib/stage.js
 import { calibrateFonts } from './lib/fonts.js'
 import Header from './components/Header.jsx'
 import Stage from './components/Stage.jsx'
-import Flow from './components/Flow.jsx'
 import Viewer, { photoIndex } from './components/Viewer.jsx'
 
 const COUNT = PAGES.reduce((n, p) => n + p.photos.length, 0)
@@ -38,7 +37,7 @@ export default function App() {
           {PAGES.map((page, i) => (
             <section key={page.id} id={page.id} className="page" aria-label={page.title}>
               {i === 0 ? <h1 className="sr-only">{SITE.title}</h1> : <h2 className="sr-only">{page.title}</h2>}
-              {size.mode === 'flow' ? <Flow page={page} onOpen={open} /> : <Stage page={page} eager={i === 0} onOpen={open} />}
+              <Stage page={page} eager={i === 0} onOpen={open} />
             </section>
           ))}
         </main>

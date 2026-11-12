@@ -75,64 +75,6 @@ img { display: block; }
   a.lt:focus-visible { outline: 6px solid #111; outline-offset: 10px; }
 
   /* -------------------------------------------------------------------
-     Phone layout ("flow"): the same pieces in one column.
-     A .patch is a rectangle of the design, scaled; inside it everything is
-     still positioned in design pixels.
-     ------------------------------------------------------------------- */
-  .flow { position: relative; padding: 30px 16px 38px; overflow: hidden; background-size: cover; background-position: center; }
-  .flow > * { max-width: 688px; margin-inline: auto; }
-  .patch { position: relative; flex: none; }
-  /* the top or bottom band of the page as designed, full width, melting into the column: the
-     star clusters that run across page borders keep running across sections */
-  .flow > .edge { position: relative; overflow: hidden; max-width: none; width: calc(100% + 32px); margin-inline: -16px; pointer-events: none; }
-  .edge-top { margin-top: -30px; margin-bottom: 6px; mask-image: linear-gradient(#000 30%, transparent 78%); }
-  .edge-bottom { margin-top: 10px; margin-bottom: -38px; mask-image: linear-gradient(transparent 28%, #000 80%); }
-  .flow-about > .edge-top { margin-top: -22px; }
-  .edge-inner { position: absolute; left: 0; top: 0; width: 3275px; transform-origin: 0 0; }
-  .edge-inner > img.edge-plate { position: absolute; left: 0; width: 3275px; height: 1842px; max-width: none; }
-  .patch-inner { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
-
-  .flow-paper { background-color: #fbf1e4; background-image: url("/art/common/paper.webp"); background-size: 420px 420px; background-repeat: repeat; }
-  .flow-titles { display: grid; gap: 8px; justify-items: center; margin-bottom: 26px; }
-  .cluster { margin: 0 auto 34px; }
-  .cluster:last-child { margin-bottom: 6px; }
-  .cluster-labels { position: relative; z-index: 2; display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 14px; margin-top: -10px; }
-  .cluster-label { transform: rotate(var(--tilt, 0deg)); }
-  .cluster-note { margin: 0; text-align: center; line-height: 1.25; white-space: pre-line; }
-  .cluster-left .patch { margin-left: 4%; margin-right: auto; }
-  .cluster-right .patch { margin-left: auto; margin-right: 4%; }
-
-  .flow-intro { display: flex; flex-direction: column; min-height: calc(100svh - var(--nav-h)); padding-bottom: 0; background-position: 28% center; }
-  .flow-intro-top { width: 100%; }
-  .flow-pills { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 0; margin: 14px 0 12px -4px; }
-  .flow-welcome { max-width: 34ch; margin: 0; line-height: 1.5; text-wrap: pretty; }
-  .flow-intro-figure { display: flex; justify-content: flex-end; width: 100%; margin-top: auto; padding-top: 18px; }
-  .flow-intro-figure .patch { margin-right: -34px; }
-
-  .flow-thanks { padding: 46px 12px 54px; }
-  .flow-band { padding: 28px 16px 46px; text-align: center; background-color: #0b0b0b; background-image: radial-gradient(rgba(253, 246, 236, 0.16) 1.3px, transparent 1.7px); background-size: 13px 13px; border-top: 5px solid var(--cream); }
-  .flow-band-line { margin: 0 0 4px; line-height: 1.55; letter-spacing: 0.02em; }
-  .flow-chips { display: flex; flex-wrap: wrap; gap: 10px 10px; }
-  .flow-chips-centre { justify-content: center; margin-top: 22px; }
-
-  .flow-about { padding-top: 22px; }
-  .about-tab { margin-left: -16px; }
-  .about-para { margin: 16px 0 0; line-height: 1.62; text-wrap: pretty; }
-  .about-portrait { margin: 26px auto 8px; display: flex; justify-content: center; }
-  .about-block { margin-top: 30px; }
-  .about-head { margin-left: -6px; margin-bottom: 12px; }
-  .about-facts { display: grid; gap: 9px; margin: 0; }
-  .about-facts > div { display: flex; justify-content: space-between; gap: 16px; align-items: baseline; }
-  .about-facts dt, .about-facts dd { margin: 0; }
-  .about-facts dd { text-align: right; }
-  .about-entry { margin: 0 0 14px; line-height: 1.3; white-space: pre-line; }
-  .chip-tagged { position: relative; display: inline-flex; margin-top: 18px; }
-  .chip-tag { position: absolute; left: 4px; bottom: calc(100% - 2px); line-height: 1; white-space: nowrap; color: #111; transform: rotate(-6deg); transform-origin: left bottom; }
-  .chip-tag::after { content: " ↴"; color: var(--red); }
-  .about-note { display: block; margin: 14px 0 0; line-height: 1.25; color: #111; text-decoration: none; }
-  a.about-note { display: inline-block; padding: 2px 0; border-bottom: 3px solid var(--red); transform: rotate(-1.5deg); }
-
-  /* -------------------------------------------------------------------
      Motion. Pieces rest exactly where the design puts them; these only
      describe how they arrive and how they answer the pointer. All of it
      is skipped for visitors who ask their device for reduced motion.

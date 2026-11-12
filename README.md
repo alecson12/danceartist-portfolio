@@ -1,53 +1,126 @@
 # Dance Artist portfolio
 
-A single page that shows the Behance portfolio images as one seamless vertical
-stack, full width at any screen size.
+Alecson Gantica's dance portfolio as a real website, rebuilt from the Photoshop
+design instead of showing the design as flat pictures.
 
-## Adding or reordering images
+- **The look is the design.** Backgrounds are the designer's own exported pixels.
+  Photos, labels, stickers and title lettering are cut from the PSD layers.
+- **The wording is real text.** Body copy, labels, captions, chips and contact
+  details are set live in the design's fonts (Source Code Pro, Bebas Neue and
+  Alecson's own handwriting font), so they can be selected, searched, read aloud
+  and stay sharp at any size.
+- **Things work.** The three buttons on the first page, the header menu, every
+  contact chip and every photo (opens in a full-screen viewer) are functional.
+- **Same pages on every screen.** Phones show the pages whole, scaled to the
+  screen width, with a compact menu; pinch to zoom in.
 
-1. Drop the images into `public/pages/`, named in display order:
-   `01.jpg`, `02.jpg`, `03.jpg` … (any size; jpg, png, webp, gif, avif or svg).
-2. Done. The site picks them up automatically, in filename order.
-   Reorder by renaming, remove by deleting.
+Live at https://alecson12.github.io/danceartist-portfolio/
 
-Everything else that is editable (tab title, background colour, max width,
-footer link, optional alt text) is in `src/content/portfolio.js`.
+## Changing things
 
-## Spinning stars
+| I want to change… | Do this |
+| --- | --- |
+| Wording, a photo, a layout, add a page element | Edit the PSD in Photoshop, save, run `npm run extract` |
+| Where a link goes, the header menu, page names for screen readers | Edit `src/content/site.js` |
+| Turn all movement off | `motion: false` in `src/content/site.js` |
+| Which PSD is which page, or how a layer is treated | `scripts/psd/config.cjs` |
 
-The star icon in `public/icon/star_p5.png` is laid over every small star in the
-pages and slowly spins. Its positions live in `src/content/stars.js`:
+### After editing a PSD
 
-- `npm run find-stars` regenerates that file by scanning the images (run it
-  again if a page image changes).
-- The file is plain data you can hand-edit: delete a line to remove a star,
-  copy a line and change `x`/`y` (percent of the image) to add one.
-- Size, speed and the icon itself are set under `stars` in
-  `src/content/portfolio.js`; set `stars: null` to turn the effect off.
+```bash
+npm run extract
+```
+
+That reads the PSDs in `E:\_DESIGN FILES\Dance Portfolio` (read-only: nothing in
+that folder is ever written) and regenerates `public/art/` and
+`src/content/generated/`. One document only: `npm run extract -- about`
+(`intro`, `about`, `highlights`, `works` or `thanks`). It takes about five
+minutes for everything.
+
+Two things to know when saving in Photoshop:
+
+- Keep **Maximize Compatibility** on (the default). The build takes the page
+  backgrounds from the flattened copy that option stores inside the PSD.
+- Text set in Source Code Pro, Bebas or the Handwritten font becomes live text.
+  Text in any other font (the big title lettering, sticker words) stays artwork,
+  exactly as drawn.
+
+If the design folder moves, set `DANCE_DESIGN_DIR` to its new path.
 
 ## Running it
 
 ```bash
 npm install
+```
+
+```bash
 npm run dev
 ```
 
-Then open the address Vite prints (http://localhost:5173 by default).
-
-`npm run build` writes the deployable site to `dist/`.
+Then open the address Vite prints. `npm run build` writes the deployable site to
+`dist/`.
 
 ## Deploying
 
-Pushing to the `main` branch of the GitHub repo runs
-`.github/workflows/deploy.yml`, which builds the site and publishes it to
-GitHub Pages at `https://alecson12.github.io/danceartist-portfolio/`.
-The repo must be named `danceartist-portfolio`; if it is named differently, change
-`base` in `vite.config.js` to match.
+Pushing to `main` on GitHub runs `.github/workflows/deploy.yml`, which builds the
+site and publishes it to GitHub Pages. The repository is
+`alecson12/danceartist-portfolio`; if it is ever renamed, change `base` in
+`vite.config.js` to match.
 
 ## How it works
 
-`vite-plugin-pages.js` scans `public/pages/` at build time, sorts the files by
-name and reads each image's pixel size. `src/App.jsx` renders them as `<img>`
-elements with width and height set, so the browser reserves the right space
-before the images load and the page never jumps. Images below the fold load
-lazily.
+```
+E:\_DESIGN FILES\Dance Portfolio\*.psd
+        │  npm run extract   (scripts/psd/)
+        ▼
+public/art/<page>/plate-*.webp        page background
+public/art/<page>/photo|label|title|deco|sprite-*.webp   separate pieces
+public/art/<page>/full-*.webp         photos for the viewer
+src/content/generated/*.json          where every piece and line of text goes
+        │
+        ▼
+src/components/Stage.jsx   a page at 3275 × 1842, scaled as a whole (desktop, tablet)
+```
+
+**Extraction** (`scripts/psd/`)
+
+- `compositor.cjs` is a small Photoshop-compatible renderer: blend modes, masks,
+  clipping, groups, and the layer effects this design uses. It can render any
+  subset of a document's layers.
+- `units.cjs` decides what each layer becomes: live text, a photo, a label with
+  text on it, title art, or background. Decoration that sits on top of a photo
+  (tape, a star, a sticker) travels with that photo.
+- `page.cjs` builds each page. The background plate is the designer's own
+  flattened export with the separate pieces removed and the layers beneath them
+  rendered in. Solid areas of every piece are copied from that same export, so
+  photos and labels are pixel-identical to the design.
+- `text.cjs` turns a text layer into font, size, colour, spacing and position.
+  Paragraphs are broken into lines the way Photoshop breaks them, and each block
+  is anchored to the actual pixels of its layer.
+- `photo.cjs` cuts the viewer picture: the same crop as the frame shows, upright,
+  from the original image stored inside the PSD where there is one.
+
+Each run prints, per page, how closely the pieces reassemble into the original
+(`seam` is the mismatch where a removed piece met the background; under 1 on a
+scale of 255 is invisible).
+
+**The site** (`src/`)
+
+- A page is a 3275 × 1842 stage. Everything inside is positioned in design pixels
+  and the stage is scaled to the window, so the composition never reflows.
+- Live text is pinned by its baseline and carries the layer's own transform
+  (`components/LiveText.jsx`); `lib/fonts.js` measures where each font's baseline
+  falls in the visitor's browser.
+- Below 960 px wide the pages span the full width and the header becomes a
+  compact menu. The pages themselves are the same.
+- Movement is subtle and optional: pieces arrive as a page scrolls in, photos and
+  buttons lift on hover. It is skipped entirely for visitors who ask their device
+  for reduced motion.
+
+## Fonts
+
+- Source Code Pro and Bebas Neue: SIL Open Font License, served from the
+  `@fontsource` packages.
+- `src/assets/fonts/Handwritten.ttf`: Alecson's handwriting font.
+- The title lettering fonts (Aliens Among Us, the Persona-style cut-out font,
+  Designer, Bubblegum Superstar) are not shipped; that lettering is artwork.

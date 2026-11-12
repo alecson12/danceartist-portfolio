@@ -1,0 +1,17 @@
+{
+ "scp": {
+  "baseline": 0.3555,
+  "asc": 0.984,
+  "desc": 0.273
+ },
+ "bebas": {
+  "baseline": 0.3,
+  "asc": 0.9,
+  "desc": 0.3
+ },
+ "hand": {
+  "baseline": 0.325,
+  "asc": 0.8,
+  "desc": 0.15
+ }
+}

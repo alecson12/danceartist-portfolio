@@ -6,6 +6,21 @@
     <meta name="theme-color" content="#000000" />
     <meta name="description" content="Alecson Gantica — dance artist portfolio." />
     <title>Alecson Gantica — Dance Artist</title>
+    <!-- Google Analytics 4. Paste the Measurement ID (G-XXXXXXXXXX) between the quotes.
+         While it is empty nothing is loaded and nothing is tracked. -->
+    <script>
+      const GA_ID = ''
+      if (GA_ID) {
+        const s = document.createElement('script')
+        s.async = true
+        s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID
+        document.head.appendChild(s)
+        window.dataLayer = window.dataLayer || []
+        function gtag() { dataLayer.push(arguments) }
+        gtag('js', new Date())
+        gtag('config', GA_ID)
+      }
+    </script>
   </head>
   <body style="background:#000">
     <div id="root"></div>
